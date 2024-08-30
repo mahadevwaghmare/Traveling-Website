@@ -9,9 +9,9 @@ import { BASE_URL } from '../utils/config'
 
 const Register = () => {
    const [credentials, setCredentials] = useState({
-      userName: undefined,
-      email: undefined,
-      password: undefined
+      username: '',  // Changed: Consistent key name
+      email: '',
+      password: ''
    })
 
    const {dispatch} = useContext(AuthContext)
@@ -26,20 +26,23 @@ const Register = () => {
 
       try {
          const res = await fetch(`${BASE_URL}/auth/register`, {
-            method:'post',
+            method: 'post',
             headers: {
-               'content-type':'application/json'
+               'Content-Type': 'application/json' // Changed: Capitalized 'Content-Type'
             },
             body: JSON.stringify(credentials)
          })
-         const result = await res.json()
+         const result = await res.json();
+         if (!res.ok) {
+            alert(result.message)
+            return; // Changed: Stop further execution on error
+         }
 
-         if(!res.ok) alert(result.message)
-
-         dispatch({type:'REGISTER_SUCCESS'})
+         dispatch({ type: 'REGISTER_SUCCESS' }) // Dispatch only if the registration is successful
          navigate('/login')
-      } catch(err) {
+      } catch (err) {
          alert(err.message)
+         alert("Something is Wrong");
       }
    }
 
@@ -81,4 +84,4 @@ const Register = () => {
    )
 }
 
-export default Register
+export default Register;
